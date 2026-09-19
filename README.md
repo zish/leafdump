@@ -287,13 +287,13 @@ WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
      page, where a relative link resolves against pypi.org and 404s. Defined
      once here so a move or a branch rename is one edit rather than ten. -->
 
-[install]: https://github.com/zish/json_dump/blob/master/INSTALL.md
-[install-sdist]: https://github.com/zish/json_dump/blob/master/INSTALL.md#building-from-the-source-distribution
-[install-completion]: https://github.com/zish/json_dump/blob/master/INSTALL.md#shell-completion
-[roadmap]: https://github.com/zish/json_dump/blob/master/ROADMAP.md
-[authors]: https://github.com/zish/json_dump/blob/master/AUTHORS.md
-[versioning]: https://github.com/zish/json_dump/blob/master/VERSIONING.md
-[security]: https://github.com/zish/json_dump/blob/master/SECURITY.md
-[license]: https://github.com/zish/json_dump/blob/master/LICENSE
-[templates]: https://github.com/zish/json_dump/tree/master/contrib/templates
-[completions]: https://github.com/zish/json_dump/tree/master/contrib/completions
+[install]: https://github.com/zish/json-dump/blob/master/INSTALL.md
+[install-sdist]: https://github.com/zish/json-dump/blob/master/INSTALL.md#building-from-the-source-distribution
+[install-completion]: https://github.com/zish/json-dump/blob/master/INSTALL.md#shell-completion
+[roadmap]: https://github.com/zish/json-dump/blob/master/ROADMAP.md
+[authors]: https://github.com/zish/json-dump/blob/master/AUTHORS.md
+[versioning]: https://github.com/zish/json-dump/blob/master/VERSIONING.md
+[security]: https://github.com/zish/json-dump/blob/master/SECURITY.md
+[license]: https://github.com/zish/json-dump/blob/master/LICENSE
+[templates]: https://github.com/zish/json-dump/tree/master/contrib/templates
+[completions]: https://github.com/zish/json-dump/tree/master/contrib/completions

@@ -59,9 +59,9 @@ extras = ["pymongo>=4.0", "fastavro>=1.9", "protobuf>=4.0"]
 json-dump = "json_dump.cli:entrypoint"
 
 [project.urls]
-Homepage = "https://github.com/zish/json_dump"
-Source = "https://github.com/zish/json_dump"
-Issues = "https://github.com/zish/json_dump/issues"
+Homepage = "https://github.com/zish/json-dump"
+Source = "https://github.com/zish/json-dump"
+Issues = "https://github.com/zish/json-dump/issues"
 
 [tool.setuptools]
 packages = ["json_dump"]

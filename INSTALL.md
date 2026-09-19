@@ -125,7 +125,7 @@ round-trip caveats, whether or not it is installed.
 ## Install from source
 
 ```console
-$ git clone https://github.com/zish/json_dump.git
+$ git clone https://github.com/zish/json-dump.git
 $ cd json_dump
 $ pip install '.[all]'
 ```
@@ -167,7 +167,7 @@ clean run.
 Because the core is pure standard library, a checkout is already runnable:
 
 ```console
-$ git clone https://github.com/zish/json_dump.git
+$ git clone https://github.com/zish/json-dump.git
 $ cd json_dump
 $ python3 -m json_dump config.json
 ```
