@@ -55,10 +55,18 @@ jobs:
       # Keyed on the Makefile because that is where the tool versions are
       # pinned; a bump there must miss the cache and reinstall, or the job would
       # keep running the old linter and reporting the old findings.
+      #
+      # And keyed on the repository, because a virtualenv is bound to its
+      # absolute path: every console script in it carries a shebang naming its
+      # own bin/python. The workspace is /home/runner/work/<repo>/<repo>, so
+      # renaming the repository moved it and the restored venv pointed at a
+      # directory that no longer existed -- mypy died with "cannot execute:
+      # required file not found" while ruff and zizmor, being binaries with no
+      # shebang, carried on as though nothing were wrong.
       - uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: .venv-tools
-          key: ${{ runner.os }}-tools-${{ hashFiles('Makefile') }}
+          key: ${{ runner.os }}-${{ github.repository }}-tools-${{ hashFiles('Makefile') }}
 
       # Enforced, like every other gate here. This step was advisory for as long
       # as the tree was hand-aligned rather than ruff-formatted; the tree was
@@ -220,7 +228,7 @@ jobs:
       - uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: .venv-tools
-          key: ${{ runner.os }}-tools-${{ hashFiles('Makefile') }}
+          key: ${{ runner.os }}-${{ github.repository }}-tools-${{ hashFiles('Makefile') }}
       - run: make vuln
 
   workflows:
@@ -240,7 +248,7 @@ jobs:
       - uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: .venv-tools
-          key: ${{ runner.os }}-tools-${{ hashFiles('Makefile') }}
+          key: ${{ runner.os }}-${{ github.repository }}-tools-${{ hashFiles('Makefile') }}
       # zizmor audits this directory's own workflows. GH_TOKEN lets it resolve
       # action owners and catch impostor commits -- a SHA pin that points at a
       # fork rather than at the repository the comment names.

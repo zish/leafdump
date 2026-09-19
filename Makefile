@@ -82,6 +82,29 @@ ZSHCOMPDIR  ?= $(PREFIX)/share/zsh/site-functions
 TOOLS_ENV := $(CURDIR)/.venv-tools
 BUILD_ENV := $(CURDIR)/.venv-build
 
+# A virtualenv is bound to the absolute path it was built at: every console
+# script in it opens with a shebang naming its own bin/python. Move the
+# directory and `ruff` keeps working, because it is a binary with no shebang,
+# while `mypy` dies with "cannot execute: required file not found" -- which
+# reads like a missing file rather than a moved one.
+#
+# Checked here, at parse time, and not inside mkvenv, because the install
+# stamps live *inside* the venv. A venv that moves brings its stamps with it,
+# so make sees every tool as already installed, never calls mkvenv, and runs
+# the broken script. This is the only place early enough to matter. Renaming a
+# checkout is the usual way in; CI hit it by renaming the repository, which
+# moved the workspace under it.
+define stale_venv
+$(if $(wildcard $(1)/.),$(if $(filter $(1),$(shell cat $(1)/.built-for 2>/dev/null)),,$(1)))
+endef
+STALE_VENVS := $(strip $(call stale_venv,$(TOOLS_ENV)) $(call stale_venv,$(BUILD_ENV)))
+ifneq ($(STALE_VENVS),)
+$(info note: removing virtualenv(s) built for another path: $(STALE_VENVS))
+$(info       each target reinstalls what it needs; run `make tools` to
+$(info       restore the rest, including the lefthook the git hooks call.)
+$(shell rm -rf $(STALE_VENVS))
+endif
+
 # uv is used when it is present because it is much faster and, more usefully,
 # because it creates virtualenvs on systems where the stdlib `venv` cannot:
 # a Python built without `ensurepip` (common in container and distro-split
@@ -100,6 +123,7 @@ define mkvenv
 	    exit 1; }; \
 	  fi; \
 	fi
+	@echo "$(1)" > "$(1)/.built-for"
 endef
 
 # The pip branch checks for pip rather than assuming it: a virtualenv created
