@@ -7,18 +7,11 @@
 # verify that the file in front of them came from this workflow and this commit
 # rather than from someone's laptop.
 #
-# What this deliberately does NOT do is publish to PyPI. Adding it is one job
-# using PyPI's trusted publishing (no API token to leak):
-#
-#     publish:
-#       needs: [dist]
-#       environment: pypi
-#       permissions: {id-token: write}
-#       steps: [download dist/, pypa/gh-action-pypi-publish]
-#
-# It is left out because it cannot be added unilaterally: the publisher has to
-# be configured on PyPI's side first, and a job that assumes it exists fails on
-# the first tag, at the least convenient moment.
+# The sdist and wheel also go to PyPI, through trusted publishing: the `pypi`
+# job below exchanges a short-lived OIDC token for upload rights, so there is no
+# API token stored here to leak or rotate. The publisher is registered on PyPI's
+# side against this repository, this workflow file and the `pypi` environment;
+# all four have to agree or the upload is refused.
 #
 # Binaries are built for Linux and macOS. Windows is missing for a specific
 # reason rather than an oversight -- the runner image has no make(1), so a
@@ -165,3 +158,38 @@ jobs:
             gh release create "$tag" --title "$tag" --generate-notes
           fi
           gh release upload "$tag" artifacts/* --clobber
+
+  # Last, and gated on everything else. A package index keeps version numbers
+  # forever: a wrong upload cannot be replaced, only yanked, and yanking hides
+  # the number without freeing it. So this waits for the tarball to have passed
+  # its own test suite, both binaries to have compiled, and the GitHub release
+  # to exist and be attested. Anything that fails upstream of here fails before
+  # a permanent decision is taken.
+  #
+  # Not named `publish` -- the attestation job above already holds that key.
+  #
+  # `environment: pypi` is not decoration. The registered publisher names that
+  # environment, so PyPI rejects a token whose claim lacks it; and an
+  # environment is where a required reviewer can be added, which is the only
+  # way to put a human between a pushed tag and a permanent version number.
+  pypi:
+    name: publish to PyPI
+    needs: [dist, binary, publish]
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    environment: pypi
+    permissions:
+      id-token: write       # mint the OIDC token trusted publishing exchanges
+    steps:
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: dist
+          path: dist
+
+      # Only the sdist and wheel. The binaries are GitHub release assets and
+      # have no place on a Python index; pointing this at the merged artifact
+      # directory would try to upload them and fail.
+      - uses: pypa/gh-action-pypi-publish@dc37677b2e1c63e2034f94d8a5b11f265b73ba33 # v1.14.2
+        with:
+          packages-dir: dist
+          print-hash: true
