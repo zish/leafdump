@@ -1,7 +1,7 @@
 # Copyright 2026 Jeremy Melanson
 # SPDX-License-Identifier: Apache-2.0
 
-"""Test suite for json_dump.
+"""Test suite for leafdump.
 
 Runs with plain `python3 -m unittest` -- no pytest required, so it works in
 the same dependency-free environment the tool itself targets.  Tests for
@@ -22,15 +22,15 @@ from typing import ClassVar
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from json_dump import cli, merge, registry, templates
-from json_dump.codecs import Context, codec_for
-from json_dump.flatten import (
+from leafdump import cli, merge, registry, templates
+from leafdump.codecs import Context, codec_for
+from leafdump.flatten import (
     RenderOptions,
     render_perl,
     render_python,
     render_template,
 )
-from json_dump.templates import TemplateError
+from leafdump.templates import TemplateError
 
 SAMPLE = {
     "n": 42,

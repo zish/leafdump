@@ -1,4 +1,4 @@
-# Git hooks for json-dump.  Install once per clone:  make hooks
+# Git hooks for leafdump.  Install once per clone:  make hooks
 #
 # Every job shells out to a make target. The Makefile is the single definition
 # of each gate, so a hook can never check something different from CI.
@@ -34,7 +34,7 @@ pre-commit:
     # Cheap (one interpreter start) and catches the mistake that is hardest to
     # notice locally: an optional import escaping to module scope, which works
     # on every machine that has the package and breaks only for the person who
-    # installed json-dump without extras.
+    # installed leafdump without extras.
     - name: core is dependency-free
       run: make core-check
 

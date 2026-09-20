@@ -1,6 +1,6 @@
-# Installing json-dump
+# Installing leafdump
 
-`json-dump` is a pure-Python command-line tool. There is nothing to compile,
+`leafdump` is a pure-Python command-line tool. There is nothing to compile,
 and the core has **no dependencies at all** — every format beyond the built-in
 set is an optional extra you add only if you need it.
 
@@ -33,41 +33,41 @@ Python 3.13.5
 
 ## Install
 
-`json-dump` is an application rather than a library, so the tidiest options
-install it into an environment of its own and put a single `json-dump` command
+`leafdump` is an application rather than a library, so the tidiest options
+install it into an environment of its own and put a single `leafdump` command
 on your `PATH`.
 
 ### pipx (recommended)
 
 ```console
-$ pipx install 'json-dump[all]'
+$ pipx install 'leafdump[all]'
 ```
 
 Add a format later without reinstalling:
 
 ```console
-$ pipx inject json-dump cbor2
+$ pipx inject leafdump cbor2
 ```
 
 ### uv
 
 ```console
-$ uv tool install 'json-dump[all]'
+$ uv tool install 'leafdump[all]'
 ```
 
 ### pip, into a virtualenv
 
 ```console
-$ python3 -m venv ~/.venvs/json-dump
-$ ~/.venvs/json-dump/bin/pip install 'json-dump[all]'
-$ ln -s ~/.venvs/json-dump/bin/json-dump ~/.local/bin/json-dump
+$ python3 -m venv ~/.venvs/leafdump
+$ ~/.venvs/leafdump/bin/pip install 'leafdump[all]'
+$ ln -s ~/.venvs/leafdump/bin/leafdump ~/.local/bin/leafdump
 ```
 
 ### pip, into the current environment
 
 ```console
-$ pip install json-dump            # core only
-$ pip install 'json-dump[all]'     # the usual choice
+$ pip install leafdump            # core only
+$ pip install 'leafdump[all]'     # the usual choice
 ```
 
 On Debian, Fedora and other distributions that mark the system Python as
@@ -76,15 +76,15 @@ externally managed, a bare `pip install` will refuse to run — see
 
 ## Choosing extras
 
-The quoting matters: `'json-dump[all]'` needs the quotes in bash and zsh,
+The quoting matters: `'leafdump[all]'` needs the quotes in bash and zsh,
 which would otherwise try to glob the brackets.
 
 | Install | Formats you get |
 | --- | --- |
-| `json-dump` | `perl`, `python`, `json`, `jsonl`, `repr`, and TOML **input** |
-| `json-dump[all]` | the above **+** YAML, JSON5, TOON, TOML **output**, MessagePack, CBOR, NestedText |
-| `json-dump[extras]` | BSON, Avro, protobuf-struct — the formats with sharper edges |
-| `json-dump[all,extras]` | everything |
+| `leafdump` | `perl`, `python`, `json`, `jsonl`, `repr`, and TOML **input** |
+| `leafdump[all]` | the above **+** YAML, JSON5, TOON, TOML **output**, MessagePack, CBOR, NestedText |
+| `leafdump[extras]` | BSON, Avro, protobuf-struct — the formats with sharper edges |
+| `leafdump[all,extras]` | everything |
 
 `[all]` is the sensible default: everything stable and schemaless. `[extras]`
 is separate because those three carry caveats — BSON pulls in the whole of
@@ -107,26 +107,26 @@ Individual formats, if you would rather be precise:
 | `protobuf` | protobuf-struct in/out | `protobuf` |
 
 ```console
-$ pip install 'json-dump[yaml,cbor]'
+$ pip install 'leafdump[yaml,cbor]'
 ```
 
 You never have to memorise this table. Ask for a format you do not have and
 the error tells you what to install:
 
 ```console
-$ json-dump --to cbor data.json
-json-dump: error: support for writing 'cbor' is not installed.
-  pip install cbor2  (or: pip install 'json-dump[cbor]')
+$ leafdump --to cbor data.json
+leafdump: error: support for writing 'cbor' is not installed.
+  pip install cbor2  (or: pip install 'leafdump[cbor]')
 ```
 
-`json-dump --help-format cbor` explains any format's dependencies and
+`leafdump --help-format cbor` explains any format's dependencies and
 round-trip caveats, whether or not it is installed.
 
 ## Install from source
 
 ```console
-$ git clone https://github.com/zish/json-dump.git
-$ cd json_dump
+$ git clone https://github.com/zish/leafdump.git
+$ cd leafdump
 $ pip install '.[all]'
 ```
 
@@ -152,8 +152,8 @@ the sample documents, and the Perl script the parity test compares against. No
 checkout and nothing installed:
 
 ```console
-$ tar xf json_dump-*.tar.gz
-$ cd json_dump-*/
+$ tar xf leafdump-*.tar.gz
+$ cd leafdump-*/
 $ python3 -m unittest discover -s tests -v
 ```
 
@@ -167,36 +167,36 @@ clean run.
 Because the core is pure standard library, a checkout is already runnable:
 
 ```console
-$ git clone https://github.com/zish/json-dump.git
-$ cd json_dump
-$ python3 -m json_dump config.json
+$ git clone https://github.com/zish/leafdump.git
+$ cd leafdump
+$ python3 -m leafdump config.json
 ```
 
 That is a genuine installation strategy, not just a smoke test. To get a
 command on your `PATH` without a package manager:
 
 ```console
-$ cat > ~/.local/bin/json-dump <<'SH'
+$ cat > ~/.local/bin/leafdump <<'SH'
 #!/bin/sh
-exec python3 -m json_dump "$@"
+exec python3 -m leafdump "$@"
 SH
-$ chmod +x ~/.local/bin/json-dump
+$ chmod +x ~/.local/bin/leafdump
 ```
 
-Set `PYTHONPATH` to the checkout, or move the `json_dump/` package somewhere
+Set `PYTHONPATH` to the checkout, or move the `leafdump/` package somewhere
 already on `sys.path`. Optional formats still work if their packages are
 importable by that interpreter.
 
 ## Single-file binary
 
 For a machine with no Python at all — a scratch container, a jump host, a CI
-image you cannot install packages into — json-dump can be compiled into one
+image you cannot install packages into — leafdump can be compiled into one
 self-contained executable with [Nuitka](https://nuitka.net/):
 
 ```console
 $ make binary
-/home/you/json_dump/bin/json-dump  (14M)
-json-dump 0.2.0
+/home/you/leafdump/bin/leafdump  (14M)
+leafdump 0.2.0
 python 3.13.15
 formats enabled: json, jsonl, repr, perl, python, toml, yaml, json5, toon, msgpack, cbor, nestedtext
 ```
@@ -223,20 +223,20 @@ $ make binary EXTRAS=yaml,cbor    # ...or name them individually
 before spending the minutes to compile it, and `make binary-check` runs the
 finished binary, compares its `--list-formats` against that same list, and
 round-trips a document through every format it claims. Compiling successfully
-proves less here than it looks: json-dump reaches every optional codec through
+proves less here than it looks: leafdump reaches every optional codec through
 a module name in a *string*, which a compiler cannot follow, so a binary that
 bundled none of them still builds and still runs.
 
 ### What it costs
 
 A single file is a deployment win, not a speed win. Measured on this tree, one
-`json-dump --version`:
+`leafdump --version`:
 
 | | startup |
 | --- | --- |
 | single-file binary | 150 ms |
 | `--standalone` directory build | 42 ms |
-| `python -m json_dump` | 46 ms |
+| `python -m leafdump` | 46 ms |
 
 The onefile bootstrap unpacks its payload and execs a second process, and that
 costs about 110 ms every time the program runs. For a filter used inside a tight
@@ -283,8 +283,8 @@ obligations.
 ## Verify
 
 ```console
-$ json-dump --version
-json-dump 0.2.0
+$ leafdump --version
+leafdump 0.2.0
 python 3.13.5
 formats enabled: json, jsonl, repr, perl, python, toml, yaml, msgpack
 ```
@@ -296,14 +296,14 @@ environment as the command.
 For the full picture, including what is missing and how to get it:
 
 ```console
-$ json-dump --list-formats
+$ leafdump --list-formats
   json             in/out  text    available
     JSON (RFC 8259) -- the reference format.
     aliases: js
 ...
 ! cbor             --      binary  NOT INSTALLED
     CBOR (RFC 8949) -- IETF-standard binary object representation.
-    enable with: pip install cbor2  (or: pip install 'json-dump[cbor]')
+    enable with: pip install cbor2  (or: pip install 'leafdump[cbor]')
 ```
 
 A format marked `in` but not `in/out` is available in one direction only —
@@ -312,7 +312,7 @@ A format marked `in` but not `in/out` is available in one direction only —
 ## Shell completion
 
 Completion scripts live in [contrib/completions/](contrib/completions/). Each
-asks the installed binary for its format list (`json-dump -L --porcelain`), so
+asks the installed binary for its format list (`leafdump -L --porcelain`), so
 the candidates offered always match the optional packages you actually have.
 No completion script ever needs updating when you add an extra.
 
@@ -324,19 +324,19 @@ not. Copy them where your shell will find them:
 
 ```console
 # bash — system-wide
-$ sudo cp contrib/completions/json-dump.bash \
-       /usr/share/bash-completion/completions/json-dump
+$ sudo cp contrib/completions/leafdump.bash \
+       /usr/share/bash-completion/completions/leafdump
 
 # bash — just me
 $ mkdir -p ~/.local/share/bash-completion/completions
-$ cp contrib/completions/json-dump.bash \
-     ~/.local/share/bash-completion/completions/json-dump
+$ cp contrib/completions/leafdump.bash \
+     ~/.local/share/bash-completion/completions/leafdump
 
 # fish
-$ cp contrib/completions/json-dump.fish ~/.config/fish/completions/
+$ cp contrib/completions/leafdump.fish ~/.config/fish/completions/
 
 # zsh — any directory on $fpath, keeping the leading underscore
-$ sudo cp contrib/completions/_json-dump /usr/share/zsh/site-functions/
+$ sudo cp contrib/completions/_leafdump /usr/share/zsh/site-functions/
 ```
 
 Start a new shell afterwards. For zsh in a directory of your own, add it to
@@ -348,7 +348,7 @@ autoload -Uz compinit && compinit
 ```
 
 To try the bash completion without installing anything, `source
-contrib/completions/json-dump.bash`.
+contrib/completions/leafdump.bash`.
 
 ## Pseudocode templates
 
@@ -356,18 +356,18 @@ The path-dump notations (`perl`, `python`, `javascript`, `go`, `r`, `jq`, ...)
 are built in and need no installation:
 
 ```console
-$ json-dump --list-templates       # every notation, with an example of each
-$ json-dump --template go data.json
+$ leafdump --list-templates       # every notation, with an example of each
+$ leafdump --template go data.json
 ```
 
 A template of your own is a JSON (or TOML) file. Drop it in the per-user
 template directory and it becomes selectable by name:
 
 ```console
-$ mkdir -p ~/.config/json-dump/templates
-$ json-dump --dump-template javascript > ~/.config/json-dump/templates/kotlin.json
-$ $EDITOR ~/.config/json-dump/templates/kotlin.json
-$ json-dump --template kotlin data.json
+$ mkdir -p ~/.config/leafdump/templates
+$ leafdump --dump-template javascript > ~/.config/leafdump/templates/kotlin.json
+$ $EDITOR ~/.config/leafdump/templates/kotlin.json
+$ leafdump --template kotlin data.json
 ```
 
 `$XDG_CONFIG_HOME` moves that directory. `$JSON_DUMP_TEMPLATES` adds more,
@@ -375,42 +375,42 @@ separated like `$PATH`, searched first — which is how a template travels with
 a project rather than with a person:
 
 ```console
-$ JSON_DUMP_TEMPLATES=$PWD/.json-dump/templates json-dump --template house-style data.json
+$ JSON_DUMP_TEMPLATES=$PWD/.leafdump/templates leafdump --template house-style data.json
 ```
 
 Built-in names always resolve first, so no file can quietly redefine `perl`.
-`json-dump --help-template` documents every field, and
+`leafdump --help-template` documents every field, and
 [contrib/templates/](contrib/templates/) has three worked examples.
 
 ## Manpage
 
-A system or `--user` install puts `json-dump.1` somewhere `man` already looks:
+A system or `--user` install puts `leafdump.1` somewhere `man` already looks:
 
 ```console
-$ man json-dump
+$ man leafdump
 ```
 
 Inside a venv or pipx environment it lands in `<env>/share/man`, which is off
 the default search path. Point `MANPATH` at it or read the file directly:
 
 ```console
-$ MANPATH="$VIRTUAL_ENV/share/man:$MANPATH" man json-dump
-$ man ./man/json-dump.1        # straight from a checkout
+$ MANPATH="$VIRTUAL_ENV/share/man:$MANPATH" man leafdump
+$ man ./man/leafdump.1        # straight from a checkout
 ```
 
 ## Upgrading and uninstalling
 
 ```console
-$ pipx upgrade json-dump
-$ pip install --upgrade 'json-dump[all]'
+$ pipx upgrade leafdump
+$ pip install --upgrade 'leafdump[all]'
 ```
 
 ```console
-$ pipx uninstall json-dump
-$ pip uninstall json-dump
+$ pipx uninstall leafdump
+$ pip uninstall leafdump
 ```
 
-`pip uninstall` removes the package and the `json-dump` command but leaves the
+`pip uninstall` removes the package and the `leafdump` command but leaves the
 optional format packages behind; uninstall those separately if you want them
 gone. Completion scripts and the manpage you copied by hand are yours to
 remove.
@@ -418,20 +418,20 @@ remove.
 ## Troubleshooting
 
 **`error: externally-managed-environment`** — your distribution protects the
-system Python from `pip` (PEP 668). Use `pipx install 'json-dump[all]'`, `uv
+system Python from `pip` (PEP 668). Use `pipx install 'leafdump[all]'`, `uv
 tool install`, or a virtualenv. `pip install --break-system-packages` works but
 is the option to reach for last.
 
-**`json-dump: command not found` after a successful install** — the script
+**`leafdump: command not found` after a successful install** — the script
 directory is not on your `PATH`. It is `~/.local/bin` for `pip install --user`
 and for pipx (`pipx ensurepath` fixes it permanently), or `<venv>/bin` for a
-virtualenv you have not activated. Meanwhile `python3 -m json_dump` always
+virtualenv you have not activated. Meanwhile `python3 -m leafdump` always
 works if the package is importable, no `PATH` entry required.
 
 **A format you installed still reports NOT INSTALLED** — you almost certainly
-installed it into a different environment than the one running `json-dump`.
-Compare the interpreter in `json-dump --version` against the `pip` you used.
-With pipx, use `pipx inject json-dump <package>` rather than a bare `pip
+installed it into a different environment than the one running `leafdump`.
+Compare the interpreter in `leafdump --version` against the `pip` you used.
+With pipx, use `pipx inject leafdump <package>` rather than a bare `pip
 install`, which cannot reach inside the isolated environment.
 
 **BSON fails to import** — the `bson` module has to be the one bundled with
@@ -444,5 +444,5 @@ distribution `python-toon` installs a module named `toon`, which collides with
 an unrelated neuroscience package.
 
 **`SyntaxError` on install or first run** — you are on Python 3.10 or older.
-Install under a newer interpreter: `python3.11 -m pip install json-dump`, or
-`pipx install --python python3.13 'json-dump[all]'`.
+Install under a newer interpreter: `python3.11 -m pip install leafdump`, or
+`pipx install --python python3.13 'leafdump[all]'`.

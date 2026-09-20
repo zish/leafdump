@@ -2,15 +2,15 @@
 # Copyright 2026 Jeremy Melanson
 # SPDX-License-Identifier: Apache-2.0
 
-"""Assert that importing json_dump pulls in nothing outside the standard library.
+"""Assert that importing leafdump pulls in nothing outside the standard library.
 
 This is the executable form of the project's first invariant: `pip install
-json-dump` with no extras has to give working perl/python/json/jsonl/repr output
+leafdump` with no extras has to give working perl/python/json/jsonl/repr output
 and TOML input.  That holds only while every optional dependency stays behind a
 lazy import, and a violation is close to invisible during development -- a
 module-scope ``import yaml`` works perfectly on any machine that has PyYAML,
 which is every machine anyone develops this on.  The person it breaks for is the
-one who ran a bare ``pip install json-dump``, and by then it is shipped.
+one who ran a bare ``pip install leafdump``, and by then it is shipped.
 
 The check does not need a clean environment, which is what makes it worth
 running everywhere rather than only in CI's `core` matrix leg.  It asks what was
@@ -35,13 +35,13 @@ sys.path.insert(0, str(ROOT))
 # uses them -- but the entry point is included so that anything cli.py pulls in
 # at import time is caught as well.
 MODULES = [
-    "json_dump",
-    "json_dump.registry",
-    "json_dump.codecs",
-    "json_dump.flatten",
-    "json_dump.templates",
-    "json_dump.merge",
-    "json_dump.cli",
+    "leafdump",
+    "leafdump.registry",
+    "leafdump.codecs",
+    "leafdump.flatten",
+    "leafdump.templates",
+    "leafdump.merge",
+    "leafdump.cli",
 ]
 
 
@@ -56,7 +56,7 @@ def third_party_imports() -> list[str]:
         top = name.partition(".")[0]
         if top in sys.stdlib_module_names or top.startswith("_"):
             continue
-        if top == "json_dump":
+        if top == "leafdump":
             continue
         module = sys.modules.get(name)
         # Namespace packages and other module-shaped objects with no file are
@@ -69,7 +69,7 @@ def third_party_imports() -> list[str]:
 def main() -> int:
     offenders = third_party_imports()
     if offenders:
-        print("error: importing json_dump loaded third-party modules:")
+        print("error: importing leafdump loaded third-party modules:")
         for name in offenders:
             location = getattr(sys.modules[name], "__file__", "?")
             print(f"    {name:20} {location}")

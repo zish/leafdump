@@ -5,7 +5,7 @@
 """Fail if a CLI option is missing from one of the shell completion scripts.
 
 The completions do not need checking for *format* names: all three query the
-binary at runtime (``json-dump -L --porcelain``), so the format list they offer
+binary at runtime (``leafdump -L --porcelain``), so the format list they offer
 is always the live one and cannot go stale.
 
 Options are the opposite case.  Each completion spells the flags out by hand --
@@ -28,12 +28,12 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
-from json_dump.cli import build_parser
+from leafdump.cli import build_parser
 
 COMPLETIONS = {
-    "bash": ROOT / "contrib" / "completions" / "json-dump.bash",
-    "fish": ROOT / "contrib" / "completions" / "json-dump.fish",
-    "zsh": ROOT / "contrib" / "completions" / "_json-dump",
+    "bash": ROOT / "contrib" / "completions" / "leafdump.bash",
+    "fish": ROOT / "contrib" / "completions" / "leafdump.fish",
+    "zsh": ROOT / "contrib" / "completions" / "_leafdump",
 }
 
 # argparse generates -h/--help itself and every shell has its own opinion about

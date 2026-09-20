@@ -7,7 +7,7 @@
 Three questions, in the order they are worth asking.
 
 **Is this project's internal documentation tracked?**  ``CLAUDE.md`` and
-``.claude/`` are written for people working *on* json-dump; this repository is
+``.claude/`` are written for people working *on* leafdump; this repository is
 public, so they are kept on the developer's machine.  ``.gitignore`` lists them,
 which is necessary and nowhere near sufficient: it has no effect on a path that
 is *already tracked*, and ``git add -f`` overrides it silently.  Neither failure
@@ -32,7 +32,7 @@ without exception, and this project's root is small and stable, so every
 top-level entry is enumerated in ``ALLOWED_ROOT`` and anything else is an error.
 That catches tools that do not exist yet, which is the thing a deny-list
 structurally cannot do.  Nested paths are unconstrained: a new module under
-``json_dump/`` or a new test is nobody's business but the author's.
+``leafdump/`` or a new test is nobody's business but the author's.
 
 The deny-list still earns its place.  Both checks would catch a stray
 ``.cursor/rules/go.mdc``, but only one of them can say *what it is*.
@@ -112,7 +112,7 @@ ALLOWED_ROOT = frozenset(
         "build_events.py",
         "contrib",
         "INSTALL.md",
-        "json_dump",
+        "leafdump",
         "lefthook.yml",
         "LICENSE",
         "Makefile",

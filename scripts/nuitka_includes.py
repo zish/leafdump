@@ -4,11 +4,11 @@
 
 """Emit the ``--include-*`` flags a Nuitka build needs for the optional formats.
 
-Nuitka decides what to bundle by *reading import statements*.  json_dump has
+Nuitka decides what to bundle by *reading import statements*.  leafdump has
 almost none to read: every optional dependency is reached through
-``importlib.import_module(<string>)`` in :func:`json_dump.codecs._require`, and
-probed with ``importlib.util.find_spec(<string>)`` in :mod:`json_dump.registry`.
-A compiler cannot see through a string, so a plain ``nuitka json_dump/__main__.py``
+``importlib.import_module(<string>)`` in :func:`leafdump.codecs._require`, and
+probed with ``importlib.util.find_spec(<string>)`` in :mod:`leafdump.registry`.
+A compiler cannot see through a string, so a plain ``nuitka leafdump/__main__.py``
 compiles a binary that supports the stdlib formats and nothing else -- silently,
 with a successful exit status and no warning.  The failure only shows up later,
 as ``yaml: unavailable`` from a binary that was built on a machine where PyYAML
@@ -28,7 +28,7 @@ build environment the thing that selects the binary's feature set:
 That is also why the resulting binary reports itself honestly.  ``registry``
 probes with ``find_spec``, and inside a standalone binary that resolves against
 what Nuitka compiled in rather than against the host's site-packages -- so
-``json-dump --list-formats`` describes the binary, not the machine it runs on.
+``leafdump --list-formats`` describes the binary, not the machine it runs on.
 
 Usage:
     python3 scripts/nuitka_includes.py           # flags, one per line
@@ -47,7 +47,7 @@ from pathlib import Path
 # the working tree, not whatever version happens to be on sys.path.
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from json_dump import registry
+from leafdump import registry
 
 
 def _declared() -> list[tuple[str, str, str]]:

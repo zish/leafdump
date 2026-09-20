@@ -79,9 +79,9 @@ jobs:
       matrix:
         include:
           - os: ubuntu-latest
-            asset: json-dump-linux-x86_64
+            asset: leafdump-linux-x86_64
           - os: macos-latest
-            asset: json-dump-macos-arm64
+            asset: leafdump-macos-arm64
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -109,7 +109,7 @@ jobs:
       - run: make binary-check
 
       - name: name the asset for the platform it runs on
-        run: mv bin/json-dump "bin/${{ matrix.asset }}"
+        run: mv bin/leafdump "bin/${{ matrix.asset }}"
 
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
@@ -137,7 +137,7 @@ jobs:
 
       # Provenance ties each file to this workflow, this repository and this
       # commit, verifiable afterwards with:
-      #     gh attestation verify json-dump-linux-x86_64 --repo <owner>/<repo>
+      #     gh attestation verify leafdump-linux-x86_64 --repo <owner>/<repo>
       # For a downloaded executable that is the difference between trusting the
       # file and trusting whoever handed it to you.
       - uses: actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8 # v4.2.2

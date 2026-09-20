@@ -1,10 +1,10 @@
-# json-dump — build, lint, test and packaging entrypoints.
+# leafdump — build, lint, test and packaging entrypoints.
 #
 # Every gate is defined exactly once, here. The git hooks (lefthook.yml) and the
 # CI workflows both invoke these targets rather than restating the commands, so
 # "it passed locally" and "it passed in CI" cannot drift apart.
 #
-# Nothing in this file is needed to *use* json-dump. The package itself has no
+# Nothing in this file is needed to *use* leafdump. The package itself has no
 # dependencies at all — `make core-check` is the target that proves it; everything
 # below installs into throwaway virtualenvs under this directory, and `make clean`
 # removes every trace.
@@ -20,7 +20,7 @@ BUILD := $(CURDIR)/build
 #
 # These are deliberately *not* declared in pyproject.toml. Extras there are part
 # of the published package metadata — a `dev` extra would show up in
-# `pip show json-dump` and invite `pip install json-dump[dev]` from people who
+# `pip show leafdump` and invite `pip install leafdump[dev]` from people who
 # only want to run the thing. The developer toolchain is a property of this
 # checkout, so it lives in this checkout's build file.
 RUFF_VERSION      ?= 0.16.6
@@ -58,7 +58,7 @@ EXTRAS ?= all
 TEST_EXTRAS ?=
 
 # Read from the package rather than restated, so a release bumps one file.
-VERSION := $(shell $(PY) -c 'import json_dump; print(json_dump.__version__)' 2>/dev/null)
+VERSION := $(shell $(PY) -c 'import leafdump; print(leafdump.__version__)' 2>/dev/null)
 
 # Branch that lint-new measures "new" against.
 MAIN_BRANCH ?= master
@@ -74,7 +74,7 @@ ZSHCOMPDIR  ?= $(PREFIX)/share/zsh/site-functions
 # Two virtualenvs, kept apart on purpose.
 #
 # .venv-tools holds the linters and never holds a runtime dependency of
-# json-dump. .venv-build holds Nuitka *and* whichever optional format packages
+# leafdump. .venv-build holds Nuitka *and* whichever optional format packages
 # are being compiled in — Nuitka bundles what it can import, so the build env is
 # what selects the binary's feature set. Merging the two would silently make the
 # linters' transitive dependencies (pip-audit alone pulls in a dozen) candidates
@@ -195,7 +195,7 @@ COLUMNIZE = awk -v sep=$(1) '{ i = match($$0, sep); n[NR] = substr($$0, 1, i - 1
 ## help: list every target, with examples of the common invocations
 .PHONY: help
 help:
-	@printf '\033[1mjson-dump %s\033[0m\n\n\033[1mTargets\033[0m\n' '$(VERSION)'
+	@printf '\033[1mleafdump %s\033[0m\n\n\033[1mTargets\033[0m\n' '$(VERSION)'
 	@grep -hE '^## ' $(MAKEFILE_LIST) | sed 's/^## //' | $(call COLUMNIZE,': *')
 	@printf '\n\033[1mExamples\033[0m\n'
 	@grep -hE '^#> ' $(MAKEFILE_LIST) | sed 's/^#> //' | $(call COLUMNIZE,' +# ')
@@ -248,7 +248,7 @@ lint-new: $(NEED_RUFF)
 ## typecheck: mypy over the package
 .PHONY: typecheck
 typecheck: $(NEED_MYPY)
-	$(MYPY) json_dump scripts
+	$(MYPY) leafdump scripts
 
 # ---------------------------------------------------------------------- test
 
@@ -268,11 +268,11 @@ test:
 # The zero-dependency invariant is the project's headline promise and nothing
 # in the tree enforced it until this target: a stray `import yaml` at module
 # scope would keep passing on any developer machine that happens to have PyYAML,
-# and only break for the person who ran `pip install json-dump` with no extras.
+# and only break for the person who ran `pip install leafdump` with no extras.
 #
 # EXTRAS= (empty) is that person's environment, reproduced exactly.
 # The environment is built and thrown away on every run, so what it proves is
-# what a `pip install json-dump` gets and nothing that happens to be lying
+# what a `pip install leafdump` gets and nothing that happens to be lying
 # around in this checkout. Building it needs either a `python3` whose `venv`
 # can bootstrap pip -- Debian and Fedora split that into python3-venv, so a
 # container image often lacks it -- or uv; mkvenv says which when neither is
@@ -293,7 +293,7 @@ test-isolated:
 # one, with every extra installed. That is the point: it fails on a module-scope
 # `import yaml` even on the machine where PyYAML is present, which is the only
 # machine the mistake is ever made on.
-## core-check: assert importing json_dump pulls in nothing third-party
+## core-check: assert importing leafdump pulls in nothing third-party
 .PHONY: core-check
 core-check:
 	$(PY) scripts/check_core_isolation.py
@@ -340,10 +340,10 @@ version-check:
 
 # Two different questions, deliberately kept as two targets.
 #
-# `vuln` asks whether the packages json-dump *depends on* have known CVEs. With
+# `vuln` asks whether the packages leafdump *depends on* have known CVEs. With
 # no required dependencies the interesting surface is the optional set, so this
 # audits the project with every extra resolved — the maximal install, which is
-# what `pip install 'json-dump[all]'` gives someone.
+# what `pip install 'leafdump[all]'` gives someone.
 #
 # `audit` asks whether the CI configuration itself is exploitable: script
 # injection through untrusted interpolation, over-broad token permissions,
@@ -378,7 +378,7 @@ audit: $(NEED_ZIZMOR)
 # depend on the state of the machine that cut it.
 #
 # The egg-info directory goes with it, and that is not tidiness. setuptools
-# caches the sdist's file list in json_dump.egg-info/SOURCES.txt and reads it
+# caches the sdist's file list in leafdump.egg-info/SOURCES.txt and reads it
 # back on the next build -- "reading manifest file" appears in the log *before*
 # "reading manifest template". A path dropped from MANIFEST.in therefore keeps
 # shipping, because the cache still names it, and the build reports success.
@@ -466,12 +466,12 @@ $(BUILD_STAMP):
 
 # Two flags here are load-bearing rather than cosmetic:
 #
-# --python-flag=-m compiles json_dump as a package, entered at its __main__.
-# Handing Nuitka the path json_dump/__main__.py instead compiles that file as a
+# --python-flag=-m compiles leafdump as a package, entered at its __main__.
+# Handing Nuitka the path leafdump/__main__.py instead compiles that file as a
 # top-level script, which promotes its siblings to top-level modules — and this
 # package contains codecs.py. The stdlib `codecs` gets shadowed by ours, the
 # interpreter cannot import `encodings` during its own startup, and the binary
-# dies before reaching any json_dump code with "No module named 'codecs'". The
+# dies before reaching any leafdump code with "No module named 'codecs'". The
 # compile itself succeeds and says nothing.
 #
 # --deployment turns off the compatibility diagnostics Nuitka builds in to help
@@ -490,7 +490,7 @@ $(BUILD_STAMP):
 #
 #     onefile binary        150 ms
 #     --standalone dist/     42 ms
-#     python -m json_dump    46 ms
+#     python -m leafdump    46 ms
 #
 # The single file costs ~110 ms per invocation against just running the source,
 # because the bootstrap unpacks and then execs a second process. That is the
@@ -501,11 +501,11 @@ NUITKA_FLAGS = \
 	--python-flag=-m \
 	--python-flag=no_site \
 	--output-dir=$(BUILD)/nuitka \
-	--output-filename=json-dump \
+	--output-filename=leafdump \
 	--deployment \
 	--assume-yes-for-downloads \
 	--company-name='Jeremy Melanson' \
-	--product-name=json-dump \
+	--product-name=leafdump \
 	--product-version=$(VERSION) \
 	--file-description='Make nested data greppable, one value per line'
 
@@ -520,10 +520,10 @@ binary: $(BUILD_STAMP)
 	PATH="$(BUILD_ENV)/bin:$$PATH" $(BUILD_ENV)/bin/python -m nuitka \
 	  $(NUITKA_FLAGS) \
 	  $$($(BUILD_ENV)/bin/python scripts/nuitka_includes.py) \
-	  json_dump
-	@mv $(BUILD)/nuitka/json-dump $(BIN)/json-dump
-	@printf '\n\033[1m%s\033[0m  (%s)\n' '$(BIN)/json-dump' "$$(du -h $(BIN)/json-dump | cut -f1)"
-	@$(BIN)/json-dump --version
+	  leafdump
+	@mv $(BUILD)/nuitka/leafdump $(BIN)/leafdump
+	@printf '\n\033[1m%s\033[0m  (%s)\n' '$(BIN)/leafdump' "$$(du -h $(BIN)/leafdump | cut -f1)"
+	@$(BIN)/leafdump --version
 
 ## binary-report: show which formats the current build environment would compile in
 .PHONY: binary-report
@@ -539,29 +539,29 @@ binary-report: $(BUILD_STAMP)
 ## binary-check: assert the built binary offers the formats it was built with
 .PHONY: binary-check
 binary-check: $(BUILD_STAMP)
-	@test -x $(BIN)/json-dump || { echo "no $(BIN)/json-dump — run: make binary"; exit 1; }
-	$(BUILD_ENV)/bin/python scripts/check_binary.py $(BIN)/json-dump
+	@test -x $(BIN)/leafdump || { echo "no $(BIN)/leafdump — run: make binary"; exit 1; }
+	$(BUILD_ENV)/bin/python scripts/check_binary.py $(BIN)/leafdump
 
 # ------------------------------------------------------------------- install
 
 ## install: the compiled binary, its manpage and the shell completions
 .PHONY: install
 install:
-	@test -x $(BIN)/json-dump || { echo "no $(BIN)/json-dump — run: make binary"; exit 1; }
+	@test -x $(BIN)/leafdump || { echo "no $(BIN)/leafdump — run: make binary"; exit 1; }
 	install -d $(DESTDIR)$(PREFIX)/bin $(DESTDIR)$(MANDIR)/man1
-	install -m0755 $(BIN)/json-dump $(DESTDIR)$(PREFIX)/bin/json-dump
-	install -m0644 man/json-dump.1 $(DESTDIR)$(MANDIR)/man1/json-dump.1
+	install -m0755 $(BIN)/leafdump $(DESTDIR)$(PREFIX)/bin/leafdump
+	install -m0644 man/leafdump.1 $(DESTDIR)$(MANDIR)/man1/leafdump.1
 	install -d $(DESTDIR)$(BASHCOMPDIR) $(DESTDIR)$(FISHCOMPDIR) $(DESTDIR)$(ZSHCOMPDIR)
-	install -m0644 contrib/completions/json-dump.bash $(DESTDIR)$(BASHCOMPDIR)/json-dump
-	install -m0644 contrib/completions/json-dump.fish $(DESTDIR)$(FISHCOMPDIR)/json-dump.fish
-	install -m0644 contrib/completions/_json-dump    $(DESTDIR)$(ZSHCOMPDIR)/_json-dump
+	install -m0644 contrib/completions/leafdump.bash $(DESTDIR)$(BASHCOMPDIR)/leafdump
+	install -m0644 contrib/completions/leafdump.fish $(DESTDIR)$(FISHCOMPDIR)/leafdump.fish
+	install -m0644 contrib/completions/_leafdump    $(DESTDIR)$(ZSHCOMPDIR)/_leafdump
 
 ## uninstall: remove what install placed
 .PHONY: uninstall
 uninstall:
-	rm -f $(DESTDIR)$(PREFIX)/bin/json-dump $(DESTDIR)$(MANDIR)/man1/json-dump.1
-	rm -f $(DESTDIR)$(BASHCOMPDIR)/json-dump $(DESTDIR)$(FISHCOMPDIR)/json-dump.fish
-	rm -f $(DESTDIR)$(ZSHCOMPDIR)/_json-dump
+	rm -f $(DESTDIR)$(PREFIX)/bin/leafdump $(DESTDIR)$(MANDIR)/man1/leafdump.1
+	rm -f $(DESTDIR)$(BASHCOMPDIR)/leafdump $(DESTDIR)$(FISHCOMPDIR)/leafdump.fish
+	rm -f $(DESTDIR)$(ZSHCOMPDIR)/_leafdump
 
 # ----------------------------------------------------------------- aggregates
 

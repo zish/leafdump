@@ -1,7 +1,7 @@
 # Copyright 2026 Jeremy Melanson
 # SPDX-License-Identifier: Apache-2.0
 
-"""Command-line interface for json_dump."""
+"""Command-line interface for leafdump."""
 
 from __future__ import annotations
 
@@ -19,7 +19,7 @@ from .merge import LIST_STRATEGIES, MAP_STRATEGIES, dedup, merge_all, wrap
 from .registry import RENDER, Format, UnknownFormat, lookup
 from .templates import Template, TemplateError
 
-PROG = "json-dump"
+PROG = "leafdump"
 
 
 class Fail(SystemExit):
@@ -462,13 +462,13 @@ def build_parser() -> argparse.ArgumentParser:
         "  example of each, and --help-template explains how to write your own.",
         "",
         "EXAMPLES",
-        "  json-dump data.json                       # pseudo-perl path dump",
-        "  json-dump -t python data.json             # pseudo-python assignments",
-        "  json-dump -T go data.json                 # ...or Go, R, jq, cpp, ...",
-        "  json-dump -T ./mine.json data.json        # a template of your own",
-        "  json-dump -t yaml a.json b.json --dedup   # merge, dedupe, emit YAML",
-        "  cat packets.jsonl | json-dump -m -r       # newest packet first",
-        "  json-dump --list-formats",
+        "  leafdump data.json                       # pseudo-perl path dump",
+        "  leafdump -t python data.json             # pseudo-python assignments",
+        "  leafdump -T go data.json                 # ...or Go, R, jq, cpp, ...",
+        "  leafdump -T ./mine.json data.json        # a template of your own",
+        "  leafdump -t yaml a.json b.json --dedup   # merge, dedupe, emit YAML",
+        "  cat packets.jsonl | leafdump -m -r       # newest packet first",
+        "  leafdump --list-formats",
     ]
 
     p = argparse.ArgumentParser(
@@ -933,7 +933,7 @@ def entrypoint() -> None:
     try:
         sys.exit(main())
     except BrokenPipeError:
-        # `json-dump big.json | head` is a normal thing to do.
+        # `leafdump big.json | head` is a normal thing to do.
         try:
             sys.stdout.close()
         finally:

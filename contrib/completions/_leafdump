@@ -1,21 +1,21 @@
-#compdef json-dump json_dump
+#compdef leafdump leafdump
 #
 # Copyright 2026 Jeremy Melanson
 # SPDX-License-Identifier: Apache-2.0
 #
-# zsh completion for json-dump
+# zsh completion for leafdump
 #
 # Install: place this file in a directory on $fpath (e.g.
-#   /usr/share/zsh/site-functions) as `_json-dump`, then `compinit`.
+#   /usr/share/zsh/site-functions) as `_leafdump`, then `compinit`.
 #
-# Format candidates are read from `json-dump -L --porcelain`, so only formats
+# Format candidates are read from `leafdump -L --porcelain`, so only formats
 # whose optional Python packages are installed are offered, and each carries
 # its one-line description into the completion menu.
 
-_json_dump_formats() {
+_leafdump_formats() {
     local direction=$1 line
     local -a out
-    json-dump -L --porcelain --direction $direction 2>/dev/null | while IFS=$'\t' read -r name dir kind ok aliases summary; do
+    leafdump -L --porcelain --direction $direction 2>/dev/null | while IFS=$'\t' read -r name dir kind ok aliases summary; do
         [[ $ok == yes ]] || continue
         out+=("${name}:${summary}")
         local a
@@ -26,10 +26,10 @@ _json_dump_formats() {
     _describe -t formats 'format' out
 }
 
-_json_dump_templates() {
+_leafdump_templates() {
     local line
     local -a out
-    json-dump --list-templates --porcelain 2>/dev/null | while IFS=$'\t' read -r name source aliases example summary; do
+    leafdump --list-templates --porcelain 2>/dev/null | while IFS=$'\t' read -r name source aliases example summary; do
         out+=("${name}:${summary}")
         local a
         for a in ${(s:,:)aliases}; do
@@ -39,7 +39,7 @@ _json_dump_templates() {
     _describe -t templates 'template' out
 }
 
-_json-dump() {
+_leafdump() {
     local curcontext="$curcontext" state line
     typeset -A opt_args
 
@@ -80,14 +80,14 @@ _json-dump() {
         informat)
             local -a extra=('auto:detect from extension, then content')
             _describe -t special 'detection' extra
-            _json_dump_formats in ;;
-        outformat) _json_dump_formats out ;;
-        anyformat) _json_dump_formats any ;;
+            _leafdump_formats in ;;
+        outformat) _leafdump_formats out ;;
+        anyformat) _leafdump_formats any ;;
         template)
             # --template also accepts a path to a template file.
-            _json_dump_templates
+            _leafdump_templates
             _files ;;
     esac
 }
 
-_json-dump "$@"
+_leafdump "$@"

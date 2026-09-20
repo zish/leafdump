@@ -1,19 +1,19 @@
-.\" Manpage for json-dump.
+.\" Manpage for leafdump.
 .\" Author: Jeremy Melanson
 .\" Copyright 2026 Jeremy Melanson
 .\" SPDX-License-Identifier: Apache-2.0
-.TH JSON\-DUMP 1 "2026-09-17" "json-dump 1.0.0" "User Commands"
+.TH LEAFDUMP 1 "2026-09-20" "leafdump 1.0.0" "User Commands"
 .
 .SH NAME
-json\-dump \- make nested data greppable, one value per line
+leafdump \- make nested data greppable, one value per line
 .
 .SH SYNOPSIS
-.B json\-dump
+.B leafdump
 .RI [ OPTION ...]
 .RI [ FILE ...]
 .
 .SH DESCRIPTION
-.B json\-dump
+.B leafdump
 prints one line for every value in a nested data file, and each line is the
 complete path to that value.  A service configuration, an API response, a
 cloud CLI dump or a stream of log records becomes something
@@ -51,7 +51,7 @@ and replaced by a one\-line notice describing how to enable them.  The program
 itself, and every path notation in it, needs nothing but Python.  See
 .B FORMATS
 below and
-.BR "json\-dump \-\-list\-formats" .
+.BR "leafdump \-\-list\-formats" .
 .
 .SH OUTPUT NOTATIONS
 The path dump is rendered from a
@@ -446,7 +446,7 @@ Start from the closest built\-in and edit it:
 .PP
 .RS 4
 .EX
-json\-dump \-\-dump\-template javascript > kotlin.json
+leafdump \-\-dump\-template javascript > kotlin.json
 .EE
 .RE
 .PP
@@ -620,7 +620,7 @@ and then
 in each directory of
 .BR $JSON_DUMP_TEMPLATES ,
 then in
-.IR $XDG_CONFIG_HOME/json\-dump/templates .
+.IR $XDG_CONFIG_HOME/leafdump/templates .
 Built\-in names always resolve first and cannot be shadowed, so a file cannot
 quietly redefine
 .B perl
@@ -712,7 +712,7 @@ the schemaless well\-known type.  Needs
 .PD
 .PP
 Run
-.B json\-dump \-\-help\-format
+.B leafdump \-\-help\-format
 .I NAME
 for each format's round\-trip caveats.
 .
@@ -734,57 +734,57 @@ Interrupted.
 .TP
 Flatten a JSON document in the original notation:
 .EX
-json\-dump config.json
+leafdump config.json
 .EE
 .TP
 The same document as Python assignments:
 .EX
-json\-dump \-\-to python config.json
+leafdump \-\-to python config.json
 .EE
 .TP
 The same document as Go, or R, or jq:
 .EX
-json\-dump \-\-template go config.json
+leafdump \-\-template go config.json
 .EE
 .TP
 Render with a notation of your own:
 .EX
-json\-dump \-\-template ./kotlin.json config.json
+leafdump \-\-template ./kotlin.json config.json
 .EE
 .TP
 Reproduce the original Perl script's output exactly:
 .EX
-json\-dump \-\-perl\-compat \-e config.json
+leafdump \-\-perl\-compat \-e config.json
 .EE
 .TP
 Merge three config fragments, deduplicate every array, emit YAML:
 .EX
-json\-dump \-\-to yaml \-\-dedup base.json site.json local.json
+leafdump \-\-to yaml \-\-dedup base.json site.json local.json
 .EE
 .TP
 Merge without losing conflicting values:
 .EX
-json\-dump \-\-merge\-strategy collect \-\-to json a.json b.json
+leafdump \-\-merge\-strategy collect \-\-to json a.json b.json
 .EE
 .TP
 Keep each file under its own key instead of merging:
 .EX
-json\-dump \-\-wrap\-key stem \-\-to json */settings.json
+leafdump \-\-wrap\-key stem \-\-to json */settings.json
 .EE
 .TP
 Dump a packet capture newest packet first:
 .EX
-json\-dump \-r packets.jsonl
+leafdump \-r packets.jsonl
 .EE
 .TP
 Convert MessagePack from a pipe to indented JSON:
 .EX
-producer | json\-dump \-\-from msgpack \-\-to json
+producer | leafdump \-\-from msgpack \-\-to json
 .EE
 .TP
 Find every leaf whose path mentions a preset name:
 .EX
-json\-dump presets.json | grep '{name}'
+leafdump presets.json | grep '{name}'
 .EE
 .
 .SH ENVIRONMENT
@@ -804,7 +804,7 @@ Base of the per\-user config directory searched for templates.  Defaults to
 .
 .SH FILES
 .TP
-.I ~/.config/json\-dump/templates/
+.I ~/.config/leafdump/templates/
 Pseudocode templates available as
 .BI \-\-template " NAME"
 without a path.
@@ -817,7 +817,7 @@ without a path.
 .BR jq (1)
 is the tool for queries, joins and transformations, at the price of a filter
 language to learn;
-.B json\-dump
+.B leafdump
 is for the other half of the work \(em finding where a value lives, reading the
 shape of an unfamiliar document, or grepping a directory of them with the tools
 already to hand.
@@ -855,7 +855,7 @@ This program is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
 CONDITIONS OF ANY KIND, either express or implied.
 .
 .SH HISTORY
-.B json\-dump
+.B leafdump
 is a direct descendant of
 .BR json_dump.pl ,
 a Perl script its author wrote and used daily for several years \(em and would

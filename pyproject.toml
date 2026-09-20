@@ -3,7 +3,7 @@ requires = ["setuptools>=77"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "json-dump"
+name = "leafdump"
 dynamic = ["version"]
 description = "Make nested data greppable: every value on its own line, with the full path to it"
 readme = "README.md"
@@ -56,30 +56,30 @@ all = [
 extras = ["pymongo>=4.0", "fastavro>=1.9", "protobuf>=4.0"]
 
 [project.scripts]
-json-dump = "json_dump.cli:entrypoint"
+leafdump = "leafdump.cli:entrypoint"
 
 [project.urls]
-Homepage = "https://github.com/zish/json-dump"
-Source = "https://github.com/zish/json-dump"
-Issues = "https://github.com/zish/json-dump/issues"
+Homepage = "https://github.com/zish/leafdump"
+Source = "https://github.com/zish/leafdump"
+Issues = "https://github.com/zish/leafdump/issues"
 
 [tool.setuptools]
-packages = ["json_dump"]
+packages = ["leafdump"]
 
-# The version is read out of json_dump/__init__.py rather than written here, so
-# that `pip show json-dump` and `json-dump --version` cannot disagree. setuptools
+# The version is read out of leafdump/__init__.py rather than written here, so
+# that `pip show leafdump` and `leafdump --version` cannot disagree. setuptools
 # reads the attribute at build time, which is safe here only because that module
 # imports nothing -- in a package whose __init__ pulled in its optional codecs,
 # these three lines would make the build depend on them. `make version-check`
 # is what keeps the arrangement honest.
 [tool.setuptools.dynamic]
-version = {attr = "json_dump.__version__"}
+version = {attr = "leafdump.__version__"}
 
 [tool.setuptools.data-files]
-"share/man/man1" = ["man/json-dump.1"]
-"share/bash-completion/completions" = ["contrib/completions/json-dump.bash"]
-"share/fish/vendor_completions.d" = ["contrib/completions/json-dump.fish"]
-"share/zsh/site-functions" = ["contrib/completions/_json-dump"]
+"share/man/man1" = ["man/leafdump.1"]
+"share/bash-completion/completions" = ["contrib/completions/leafdump.bash"]
+"share/fish/vendor_completions.d" = ["contrib/completions/leafdump.fish"]
+"share/zsh/site-functions" = ["contrib/completions/_leafdump"]
 
 # ---------------------------------------------------------------------------
 # Development tooling.
@@ -122,22 +122,22 @@ ignore = [
 # flagged by the bandit rules as a category, and both are correct here: every
 # argv below is a literal list, with no interpolation of anything a caller
 # supplies.
-"json_dump/codecs.py" = ["S307"]
+"leafdump/codecs.py" = ["S307"]
 "scripts/check_binary.py" = ["S603"]
 "scripts/check_docs.py" = ["S603"]
 "scripts/check_version.py" = ["S603"]
 # Every script in scripts/ has to put the repo root on sys.path before it can
-# import json_dump, because they are run from a checkout rather than from an
+# import leafdump, because they are run from a checkout rather than from an
 # installed package. That is an import after a statement, by construction.
 "scripts/*" = ["E402"]
 "tests/*" = ["S", "E402"]
 
 [tool.ruff.lint.isort]
-known-first-party = ["json_dump"]
+known-first-party = ["leafdump"]
 
 [tool.mypy]
 python_version = "3.11"
-files = ["json_dump", "scripts"]
+files = ["leafdump", "scripts"]
 # Not strict, deliberately.  The codecs take `Any` in and give `Any` back --
 # that is what "arbitrary nested data" means -- so demanding annotated
 # signatures everywhere would produce noise rather than safety.  What is worth

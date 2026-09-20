@@ -6,14 +6,14 @@ Please report security issues privately, through GitHub's **Report a
 vulnerability** button on the repository's Security tab, rather than as a public
 issue.
 
-Useful in a report: the input that triggers it, what it makes json-dump do, and
+Useful in a report: the input that triggers it, what it makes leafdump do, and
 whether the reporter needed anything beyond the ability to hand it a file.
-json-dump is a small project with no security team and no bounty; expect a
+leafdump is a small project with no security team and no bounty; expect a
 human, not an SLA.
 
 ## Scope
 
-json-dump is a **filter you run yourself**. There is no service, no network
+leafdump is a **filter you run yourself**. There is no service, no network
 listener and no persistent state — it reads a file or a pipe, writes to another,
 and exits. The security question is therefore a narrow and specific one: *what
 can a malicious input document do?*
@@ -42,7 +42,7 @@ and truncate a dump partway through.
 
 **The optional binary codecs.** msgpack, cbor2, fastavro, pymongo's bson and
 protobuf are C extensions that parse untrusted bytes. Memory-safety bugs in them
-are theirs, but json-dump is what feeds them, so please report anything found
+are theirs, but leafdump is what feeds them, so please report anything found
 that way here as well as upstream. `make vuln` audits this set against the
 advisory database on every push and weekly on a schedule.
 
@@ -78,7 +78,7 @@ built-in names cannot be shadowed by a file.
   themselves. Report those upstream; they will reach here through `make vuln`.
 - Installing the wrong `bson`. The `bson` needed is the module bundled with
   **pymongo**; the unrelated PyPI distribution of the same name is not
-  compatible, and `json-dump --help-format bson` says so. Installing the wrong
+  compatible, and `leafdump --help-format bson` says so. Installing the wrong
   one is a footgun, and a documented one.
 - Memory or time consumed by an input the operator chose to pass in. See
   *Resource exhaustion* above.

@@ -28,16 +28,16 @@ include VERSIONING.md
 # and the completions stay named in exactly one place.
 
 # installed into share/zsh/site-functions
-include contrib/completions/_json-dump
+include contrib/completions/_leafdump
 
 # installed into share/bash-completion/completions
-include contrib/completions/json-dump.bash
+include contrib/completions/leafdump.bash
 
 # installed into share/fish/vendor_completions.d
-include contrib/completions/json-dump.fish
+include contrib/completions/leafdump.fish
 
 # installed into share/man/man1
-include man/json-dump.1
+include man/leafdump.1
 
 # --- test fixtures ----------------------------------------------------------
 # The sdist ships tests/, so it has to ship what the tests read. setuptools

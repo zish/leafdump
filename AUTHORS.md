@@ -8,7 +8,7 @@
 <https://claude.com/claude-code>
 <noreply@anthropic.com>
 
-json-dump is a rewrite of `json_dump.pl`, a Perl script Jeremy Melanson wrote
+leafdump is a rewrite of `json_dump.pl`, a Perl script Jeremy Melanson wrote
 and used daily for years; its pseudo-perl path notation, and the `--perl-compat`
 mode that reproduces the original byte for byte, come from there. The Python
 rewrite was written with Claude Code; every commit carries a `Co-Authored-By`

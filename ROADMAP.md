@@ -11,7 +11,7 @@ behind the design choices that are still open.
 pseudo-python expressions usable wherever an expression is expected.
 
 ```
-json-dump big.json --select 'ROOT["hosts"][*]["ifaces"][*]' \
+leafdump big.json --select 'ROOT["hosts"][*]["ifaces"][*]' \
                    --where  'ROOT["state"] == "up" and len(ROOT["addrs"]) > 1' \
                    --project 'name = ROOT["name"], n = len(ROOT["addrs"])'
 ```
@@ -44,7 +44,7 @@ it is the output format read backwards.
 A REPL over a loaded (or memory-mapped) structure:
 
 ```
-json-dump --shell capture.jsonl
+leafdump --shell capture.jsonl
 > .schema hosts                    # inferred shape and cardinality
 > hosts[*].ifaces[*] | where state == "up" | count
 1284
@@ -243,7 +243,7 @@ backend; it writes via `to_parquet`, `to_csv`, `create_table` and friends.
 Nested types (`struct`, `array`, `map`) are first-class in the type system,
 though how well each is supported varies by backend.
 
-The natural fit: `json-dump --to ibis` materialises into a backend table and
+The natural fit: `leafdump --to ibis` materialises into a backend table and
 hands back an Ibis expression, so the same data can then be queried as SQL or
 as a dataframe. This is also the least-effort route to §1 — rather than
 inventing a query planner, compile the SQL-style clauses to Ibis expressions

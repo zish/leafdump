@@ -4,9 +4,9 @@
 
 """Assert that everything naming a version names the same one.
 
-``json_dump/__init__.py`` is the single source.  ``pyproject.toml`` reads it
+``leafdump/__init__.py`` is the single source.  ``pyproject.toml`` reads it
 through ``[tool.setuptools.dynamic]`` rather than restating it, so pip metadata
-and ``json-dump --version`` cannot drift apart -- and the first thing this
+and ``leafdump --version`` cannot drift apart -- and the first thing this
 checks is that the arrangement is still in place, because a static ``version =``
 put back into ``[project]`` would take effect silently and look tidier than what
 it replaced.
@@ -45,9 +45,9 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
-from json_dump import __version__
+from leafdump import __version__
 
-MANPAGE = ROOT / "man" / "json-dump.1"
+MANPAGE = ROOT / "man" / "leafdump.1"
 
 # X.Y.Z, optionally a PEP 440 pre-release. Deliberately narrower than PEP 440
 # allows: no epochs, no post-releases, no local versions, no `.dev`. Those are
@@ -55,9 +55,9 @@ MANPAGE = ROOT / "man" / "json-dump.1"
 # so a version carrying one is a mistake rather than an intention.
 VERSION_RE = re.compile(r"^\d+\.\d+\.\d+(?:(?:a|b|rc)\d+)?$")
 
-# .TH JSON\-DUMP 1 "<date>" "json-dump <version>" "User Commands"
+# .TH LEAFDUMP 1 "<date>" "leafdump <version>" "User Commands"
 #                                        ^^^^^^^^^ the fourth field carries it
-TH_RE = re.compile(r'^\.TH\s+\S+\s+\d+\s+"([^"]*)"\s+"json-dump\s+([^"]+)"')
+TH_RE = re.compile(r'^\.TH\s+\S+\s+\d+\s+"([^"]*)"\s+"leafdump\s+([^"]+)"')
 
 
 def pyproject_problems() -> list[str]:
@@ -80,10 +80,10 @@ def pyproject_problems() -> list[str]:
         .get("version", {})
         .get("attr")
     )
-    if attr != "json_dump.__version__":
+    if attr != "leafdump.__version__":
         problems.append(
             f"[tool.setuptools.dynamic] version.attr is {attr!r}, "
-            "expected 'json_dump.__version__'"
+            "expected 'leafdump.__version__'"
         )
     return problems
 
@@ -129,12 +129,12 @@ def main(argv: list[str] | None = None) -> int:
     tags = head_tags()
 
     if args.report:
-        print(f"json_dump.__version__          {__version__}")
-        print("pyproject.toml                 dynamic -> json_dump.__version__")
+        print(f"leafdump.__version__          {__version__}")
+        print("pyproject.toml                 dynamic -> leafdump.__version__")
         if manpage:
-            print(f"man/json-dump.1 .TH            {manpage[1]}  (dated {manpage[0]})")
+            print(f"man/leafdump.1 .TH            {manpage[1]}  (dated {manpage[0]})")
         else:
-            print("man/json-dump.1 .TH            (no .TH line found)")
+            print("man/leafdump.1 .TH            (no .TH line found)")
         print(f"tags on HEAD                   {', '.join(tags) or '(none)'}")
         return 0
 

@@ -601,7 +601,7 @@ class ProtobufStructCodec(Codec):
 
 
 class RenderCodec(Codec):
-    """Adapter for the template renderer in :mod:`json_dump.flatten`.
+    """Adapter for the template renderer in :mod:`leafdump.flatten`.
 
     One instance per pseudocode template, plus one for ``pseudocode`` itself,
     which has no template of its own and renders whatever ``--template``

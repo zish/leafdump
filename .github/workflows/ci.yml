@@ -1,4 +1,4 @@
-# CI for json-dump.
+# CI for leafdump.
 #
 # Every step shells out to a make target, so this file stays a scheduler: what
 # "lint" or "test" means lives in the Makefile, which the git hooks call too.
@@ -142,7 +142,7 @@ jobs:
           fi
 
       # The zero-dependency invariant, asserted rather than assumed. `pip
-      # install json-dump` with no extras must give working perl/python/json/
+      # install leafdump` with no extras must give working perl/python/json/
       # jsonl/repr output and TOML input; if an optional package leaked into the
       # import path at module scope, this is where it shows up -- as an
       # ImportError naming the offender, before any test has run.
@@ -293,6 +293,6 @@ jobs:
 
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
-          name: json-dump-linux-x86_64
-          path: bin/json-dump
+          name: leafdump-linux-x86_64
+          path: bin/leafdump
           if-no-files-found: error

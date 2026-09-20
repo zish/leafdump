@@ -1,11 +1,11 @@
-# json-dump
+# leafdump
 
 Make nested data greppable. Every line is one value and the complete path to
 it, so a service configuration, an API response or a wall of log records
 becomes something `grep`, `less`, `cut` and `awk` already know what to do with.
 
 ```console
-$ json-dump config.json
+$ leafdump config.json
 ROOT.{version}."3"
 ROOT.{configurePresets}.0.{name}."default"
 ROOT.{configurePresets}.0.{hidden}.true
@@ -18,7 +18,7 @@ the whole file and a pager shows you a wall.
 
 ```console
 $ grep name minified.json | wc -l          # 1 — the whole document matched
-$ json-dump minified.json | grep name      # one line per hit, with its path
+$ leafdump minified.json | grep name      # one line per hit, with its path
 ```
 
 It is built for the question that comes up in front of a machine that is
@@ -36,7 +36,7 @@ combined.
 This is a different job from [jq](https://jqlang.github.io/jq/), and the two
 get along. jq is the tool for real queries, joins and transformations, at the
 price of a filter language you have to know well enough to write under time
-pressure. json-dump is for the other half: finding where a value lives, reading
+pressure. leafdump is for the other half: finding where a value lives, reading
 the shape of a document you have never opened, or grepping a directory of them.
 
 ## Install
@@ -44,17 +44,17 @@ the shape of a document you have never opened, or grepping a directory of them.
 Python 3.11 or newer, and nothing else:
 
 ```console
-pipx install 'json-dump[all]'  # + YAML, JSON5, TOON, TOML output, MessagePack, CBOR, NestedText
-pip install json-dump          # core: every pseudocode dump, JSON, JSONL, repr, TOML input
-pip install 'json-dump[yaml]'  # or pick individual formats
+pipx install 'leafdump[all]'  # + YAML, JSON5, TOON, TOML output, MessagePack, CBOR, NestedText
+pip install leafdump          # core: every pseudocode dump, JSON, JSONL, repr, TOML input
+pip install 'leafdump[yaml]'  # or pick individual formats
 ```
 
 For a machine with no Python on it, `make binary` compiles the whole thing —
 interpreter, package and codecs — into one self-contained executable:
 
 ```console
-$ make binary && ./bin/json-dump --version
-json-dump 0.2.0
+$ make binary && ./bin/leafdump --version
+leafdump 0.2.0
 formats enabled: json, jsonl, repr, pseudocode, toml, yaml, json5, toon, msgpack, cbor, nestedtext
 notations: perl, python, javascript, cpp, go, rust, ruby, php, lua, r, jq, jsonpath, jsonpointer, dotted, shell
 ```
@@ -69,9 +69,9 @@ The core has **no dependencies**. Every other format is optional and is hidden
 from `--help` until its package is installed:
 
 ```console
-$ json-dump --to cbor data.json
-json-dump: error: support for writing 'cbor' is not installed.
-  pip install cbor2  (or: pip install 'json-dump[cbor]')
+$ leafdump --to cbor data.json
+leafdump: error: support for writing 'cbor' is not installed.
+  pip install cbor2  (or: pip install 'leafdump[cbor]')
 ```
 
 ## Pseudocode notations
@@ -81,7 +81,7 @@ saying how one leaf is spelled as a line of some language. Fifteen are built
 in, and `--template` (`-T`) picks one:
 
 ```console
-$ json-dump --template go hosts.json
+$ leafdump --template go hosts.json
 ROOT["hosts"][0]["name"] = "web-01"
 ROOT["hosts"][0]["tls"] = true
 ROOT["hosts"][0]["tags"] = []any{}
@@ -105,7 +105,7 @@ ROOT["hosts"][0]["tags"] = []any{}
 | `dotted` | `ROOT.hosts.0.name=web-01` |
 | `shell` | `ROOT[hosts.0.name]='web-01'` |
 
-`json-dump --list-templates` prints that table from the live catalogue, custom
+`leafdump --list-templates` prints that table from the live catalogue, custom
 templates included. Every built-in is also an output format of its own name,
 so `-t go` and `-T go` are the same thing.
 
@@ -134,9 +134,9 @@ imported, evaluated or executed — the loader reads data and rejects any field
 or placeholder it does not recognise.
 
 ```console
-$ json-dump --help-template          # every field, placeholder and quoting style
-$ json-dump --help-template go       # one notation, field by field
-$ json-dump --dump-template go > kotlin.json   # a starting point to edit
+$ leafdump --help-template          # every field, placeholder and quoting style
+$ leafdump --help-template go       # one notation, field by field
+$ leafdump --dump-template go > kotlin.json   # a starting point to edit
 ```
 
 Usually only a few lines differ from something built in, so `base` inherits
@@ -155,13 +155,13 @@ the rest:
 ```
 
 ```console
-$ json-dump --template ./kotlin.json hosts.json
+$ leafdump --template ./kotlin.json hosts.json
 ROOT["hosts"][0]["name"] = "web-01"
 ```
 
 The placeholders are `%r` (root or a raw key), `%c` (the path chain), `%s` (a
 segment as a literal), `%p` (the finished path) and `%v` (the finished
-value). Drop the file into `~/.config/json-dump/templates/` — or any
+value). Drop the file into `~/.config/leafdump/templates/` — or any
 directory named in `$JSON_DUMP_TEMPLATES` — and it becomes `--template
 kotlin`. Built-in names always resolve first, so nothing can quietly redefine
 `perl` for a script that expected it.
@@ -173,12 +173,12 @@ with `base`, a flat TSV notation written from scratch, and one that emits SQL
 ## Converting
 
 ```console
-$ json-dump --to yaml   config.json
-$ json-dump --to json   --compact data.msgpack
-$ producer | json-dump --from msgpack --to jsonl
+$ leafdump --to yaml   config.json
+$ leafdump --to json   --compact data.msgpack
+$ producer | leafdump --from msgpack --to jsonl
 ```
 
-`json-dump --list-formats` shows what is available; `--help-format NAME`
+`leafdump --list-formats` shows what is available; `--help-format NAME`
 explains one format's dependencies and round-trip caveats, including for
 formats that are not installed.
 
@@ -187,10 +187,10 @@ formats that are not installed.
 Multiple inputs merge into one structure:
 
 ```console
-$ json-dump --to json base.json site.json local.json
-$ json-dump --to json --dedup --list-merge union a.json b.json
-$ json-dump --to json --merge-strategy collect a.json b.json   # keep conflicts
-$ json-dump --to json --wrap-key stem */settings.json          # key by filename
+$ leafdump --to json base.json site.json local.json
+$ leafdump --to json --dedup --list-merge union a.json b.json
+$ leafdump --to json --merge-strategy collect a.json b.json   # keep conflicts
+$ leafdump --to json --wrap-key stem */settings.json          # key by filename
 ```
 
 Deduplication compares by value **and type**, so `1`, `1.0` and `true` stay
@@ -198,7 +198,7 @@ distinct even though Python considers them equal.
 
 ## History
 
-json-dump is a direct descendant of `json_dump.pl`, a Perl script I wrote and
+leafdump is a direct descendant of `json_dump.pl`, a Perl script I wrote and
 used constantly for several years — and would probably still be using, if Perl
 were still as ubiquitous on a fresh machine as it once was. The rewrite exists
 because that assumption stopped holding, not because the notation needed
@@ -215,8 +215,8 @@ meanings.
 
 ## Documentation
 
-- `man json-dump`
-- `json-dump --help`
+- `man leafdump`
+- `leafdump --help`
 - [INSTALL.md][install] — extras, source installs, completion, manpage
 - [VERSIONING.md][versioning] — what a major bump means, and what is promised
 - [ROADMAP.md][roadmap] — planned work: SQL-style filtering, an
@@ -227,7 +227,7 @@ meanings.
 ## Shell completion
 
 Completion for bash, fish and zsh lives in [contrib/completions/][completions].
-Each queries `json-dump -L --porcelain` and `--list-templates --porcelain`, so
+Each queries `leafdump -L --porcelain` and `--list-templates --porcelain`, so
 the candidates offered always match the optional packages actually installed and
 the templates actually on your search path — no hard-coded lists to drift.
 See [INSTALL.md][install-completion] for where to put them.
@@ -287,13 +287,13 @@ WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
      page, where a relative link resolves against pypi.org and 404s. Defined
      once here so a move or a branch rename is one edit rather than ten. -->
 
-[install]: https://github.com/zish/json-dump/blob/master/INSTALL.md
-[install-sdist]: https://github.com/zish/json-dump/blob/master/INSTALL.md#building-from-the-source-distribution
-[install-completion]: https://github.com/zish/json-dump/blob/master/INSTALL.md#shell-completion
-[roadmap]: https://github.com/zish/json-dump/blob/master/ROADMAP.md
-[authors]: https://github.com/zish/json-dump/blob/master/AUTHORS.md
-[versioning]: https://github.com/zish/json-dump/blob/master/VERSIONING.md
-[security]: https://github.com/zish/json-dump/blob/master/SECURITY.md
-[license]: https://github.com/zish/json-dump/blob/master/LICENSE
-[templates]: https://github.com/zish/json-dump/tree/master/contrib/templates
-[completions]: https://github.com/zish/json-dump/tree/master/contrib/completions
+[install]: https://github.com/zish/leafdump/blob/master/INSTALL.md
+[install-sdist]: https://github.com/zish/leafdump/blob/master/INSTALL.md#building-from-the-source-distribution
+[install-completion]: https://github.com/zish/leafdump/blob/master/INSTALL.md#shell-completion
+[roadmap]: https://github.com/zish/leafdump/blob/master/ROADMAP.md
+[authors]: https://github.com/zish/leafdump/blob/master/AUTHORS.md
+[versioning]: https://github.com/zish/leafdump/blob/master/VERSIONING.md
+[security]: https://github.com/zish/leafdump/blob/master/SECURITY.md
+[license]: https://github.com/zish/leafdump/blob/master/LICENSE
+[templates]: https://github.com/zish/leafdump/tree/master/contrib/templates
+[completions]: https://github.com/zish/leafdump/tree/master/contrib/completions

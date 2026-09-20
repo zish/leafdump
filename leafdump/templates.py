@@ -5,7 +5,7 @@
 
 A template is *data*, not code: a dozen small strings describing how one leaf
 of a nested structure is spelled as a line of some language.  Rendering is one
-generic loop (:func:`json_dump.flatten.render_template`) driven by whichever
+generic loop (:func:`leafdump.flatten.render_template`) driven by whichever
 template is selected, so adding a language means adding a `Template(...)` entry
 here and nothing else -- no new renderer, no new codec, no completion edits.
 
@@ -559,7 +559,7 @@ def search_path() -> list[Path]:
     env = os.environ.get(ENV_PATH, "")
     out += [Path(p).expanduser() for p in env.split(os.pathsep) if p]
     xdg = os.environ.get("XDG_CONFIG_HOME") or (Path.home() / ".config")
-    out.append(Path(xdg) / "json-dump" / "templates")
+    out.append(Path(xdg) / "leafdump" / "templates")
     return out
 
 
@@ -706,7 +706,7 @@ def resolve(spec: str) -> Template:
         f"unknown template {spec!r}\n"
         f"  built-in: {', '.join(names())}\n"
         f"  searched: {', '.join(str(d) for d in search_path())}\n"
-        f"  see `json-dump --list-templates`"
+        f"  see `leafdump --list-templates`"
     )
 
 

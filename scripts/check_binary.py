@@ -2,11 +2,11 @@
 # Copyright 2026 Jeremy Melanson
 # SPDX-License-Identifier: Apache-2.0
 
-"""Verify a compiled json-dump binary offers the formats it was built with.
+"""Verify a compiled leafdump binary offers the formats it was built with.
 
 Run with the *build environment's* interpreter, not an arbitrary one:
 
-    .venv-build/bin/python scripts/check_binary.py bin/json-dump
+    .venv-build/bin/python scripts/check_binary.py bin/leafdump
 
 The comparison is between two things that must agree and are computed
 independently -- what the build environment could import at compile time, and
@@ -24,7 +24,7 @@ real binary.  The payload is deliberately all-strings: NestedText has no scalar
 types and protobuf's Value coerces every number to a double, so a document with
 integers in it would fail for reasons that are documented behaviour rather than
 build defects.  What is being tested here is that the codec loads and runs, not
-that it is correct -- tests/test_json_dump.py owns correctness.
+that it is correct -- tests/test_leafdump.py owns correctness.
 """
 
 from __future__ import annotations
@@ -37,7 +37,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
-from json_dump import registry
+from leafdump import registry
 
 PAYLOAD = b'{"name": "value", "nested": {"list": ["one", "two"]}}'
 

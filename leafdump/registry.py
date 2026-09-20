@@ -1,9 +1,9 @@
 # Copyright 2026 Jeremy Melanson
 # SPDX-License-Identifier: Apache-2.0
 
-"""Declarative catalogue of every input/output format json_dump knows about.
+"""Declarative catalogue of every input/output format leafdump knows about.
 
-Formats are *declared* here and *implemented* in :mod:`json_dump.codecs`.
+Formats are *declared* here and *implemented* in :mod:`leafdump.codecs`.
 Keeping the two apart means ``--help`` and the completion scripts can describe
 every format -- including the unavailable ones -- without importing a single
 third-party library.  Availability is probed with :func:`importlib.util.find_spec`,
@@ -85,7 +85,7 @@ class Format:
     reads: bool = True
     writes: bool = True
     streams: bool = False  # native multi-document support
-    extra: str = ""  # pip extras group, e.g. `pip install json-dump[yaml]`
+    extra: str = ""  # pip extras group, e.g. `pip install leafdump[yaml]`
     groups: tuple[DepGroup, ...] = ()  # needed for either direction
     read_groups: tuple[DepGroup, ...] = ()  # needed only to read
     write_groups: tuple[DepGroup, ...] = ()  # needed only to write
@@ -135,7 +135,7 @@ class Format:
             return ""
         primary = "; ".join(g.install_hint() for g in missing)
         if self.extra:
-            primary += f"  (or: pip install 'json-dump[{self.extra}]')"
+            primary += f"  (or: pip install 'leafdump[{self.extra}]')"
         return primary
 
     @property
@@ -162,7 +162,7 @@ class Format:
 
 # Every pseudocode template is also an output format under its own name, so
 # `--to go` works the same way `--to perl` always has.  Deriving them from
-# json_dump.templates rather than restating them keeps the rule that adding a
+# leafdump.templates rather than restating them keeps the rule that adding a
 # notation is a one-file change -- and keeps --list-formats, --help-format and
 # all three shell completions describing the same set.
 _TEMPLATE_FORMATS: tuple[Format, ...] = tuple(
@@ -208,7 +208,7 @@ FORMATS: tuple[Format, ...] = (
         extensions=(".pyl",),
         notes=("Reading uses ast.literal_eval, which never executes code.",),
     ),
-    # ---- pseudocode path dumps (json_dump.templates) ---------------------
+    # ---- pseudocode path dumps (leafdump.templates) ---------------------
     *_TEMPLATE_FORMATS,
     Format(
         name="pseudocode",
@@ -221,7 +221,7 @@ FORMATS: tuple[Format, ...] = (
             "This is what --template selects; every built-in template is also "
             "reachable directly as an output format of its own name.",
             "Custom templates are data files, not code: see "
-            "`json-dump --help-template` and TEMPLATES in the manpage.",
+            "`leafdump --help-template` and TEMPLATES in the manpage.",
         ),
     ),
     Format(

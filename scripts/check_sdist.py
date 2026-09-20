@@ -33,9 +33,9 @@ asks the tarball two questions rather than trusting the file:
   passed in the checkout and failed in the tarball, because the checkout had the
   worked template examples and the tarball did not.
 
-The interpreter used is this one. json-dump's core has no dependencies, so an
+The interpreter used is this one. leafdump's core has no dependencies, so an
 unpacked sdist needs nothing installed to run its own suite -- the tests import
-json_dump from the tree beside them. Optional formats are whatever this
+leafdump from the tree beside them. Optional formats are whatever this
 environment happens to have; the tests skip what is absent, and `make
 test-isolated` is where the dependency-free claim is checked.
 """
@@ -144,7 +144,7 @@ def main(argv: list[str] | None = None) -> int:
 
     print(f"ok: {archive.name} carries all {len(wanted)} files MANIFEST.in promises")
 
-    with tempfile.TemporaryDirectory(prefix="json-dump-sdist-") as tmp:
+    with tempfile.TemporaryDirectory(prefix="leafdump-sdist-") as tmp:
         with tarfile.open(archive) as tar:
             # filter="data" is the safe extraction mode: no absolute paths, no
             # escaping the destination, no device nodes. The default changes to

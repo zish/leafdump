@@ -5,14 +5,14 @@
 
 One traversal (:func:`walk_iter`) feeds one renderer
 (:func:`render_template`), which spells each leaf according to a
-:class:`~json_dump.templates.Template` -- a table of literal strings, not
+:class:`~leafdump.templates.Template` -- a table of literal strings, not
 code.  Two of those templates are the historical pair::
 
     perl     ROOT.{definitions}.{vendor}.{type}."object"
     python   ROOT["definitions"]["vendor"]["type"] = "object"
 
 and the rest (javascript, cpp, go, rust, r, jq, ...) are the same loop with
-different strings.  See :mod:`json_dump.templates` for the field list and for
+different strings.  See :mod:`leafdump.templates` for the field list and for
 how a user-supplied template is loaded.
 """
 

@@ -21,7 +21,7 @@ __pycache__/
 .pytest_cache/
 
 # Internal documentation: kept on the developer's machine, never published.
-# CLAUDE.md and .claude/ are written for people working *on* json-dump, and this
+# CLAUDE.md and .claude/ are written for people working *on* leafdump, and this
 # repository is the public one. `make docs-check` fails if either is ever
 # staged, because .gitignore alone does not stop `git add -f` and does nothing
 # about a path that is already tracked.
@@ -84,7 +84,7 @@ __pycache__/
 # Anchored to the root so the contrib/ fixtures -- which are test data and are
 # committed -- keep matching their own names.
 /ggg*.json
-/ggg*.json-dump
+/ggg*.leafdump
 /fff*.jcal
 /events.md
 /events.pdf

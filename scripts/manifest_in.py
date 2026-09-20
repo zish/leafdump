@@ -25,7 +25,7 @@ that adding to one does not look like a licence to add to another:
                   [tool.setuptools.data-files], which is already the one place
                   the manpage and the three completion scripts are named.
 
-  test fixtures   everything tests/test_json_dump.py opens from the checkout.
+  test fixtures   everything tests/test_leafdump.py opens from the checkout.
 
 The fixture group is declared rather than discovered.  The original argument for
 that was specific and is now gone: TestPerlParity used to reach json_dump.pl and
@@ -126,7 +126,7 @@ DOCS = (
     Entry("VERSIONING.md", "what a major bump means -- the compatibility promise"),
 )
 
-# Everything tests/test_json_dump.py reads from the checkout. The comment on
+# Everything tests/test_leafdump.py reads from the checkout. The comment on
 # each is the test that breaks without it, because that is the question anyone
 # reading this list is actually asking.
 FIXTURES = (
@@ -287,7 +287,7 @@ def main(argv: list[str] | None = None) -> int:
                     print(f"      {path}")
                 if not found:
                     print("      (nothing -- this pattern matches no file)")
-        print(f"\n{total} files beyond json_dump/, README.md and LICENSE")
+        print(f"\n{total} files beyond leafdump/, README.md and LICENSE")
         return 0
 
     if args.write:
